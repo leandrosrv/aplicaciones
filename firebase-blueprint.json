@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "WorkoutSet": {
+      "title": "WorkoutSet",
+      "description": "A single logged resistance training set for an exercise and muscle group.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated owner UID."
+        },
+        "fecha": {
+          "type": "string",
+          "description": "Workout date in YYYY-MM-DD format."
+        },
+        "grupo": {
+          "type": "string",
+          "description": "Muscle group name (e.g., Pecho, Espalda)."
+        },
+        "ejercicio": {
+          "type": "string",
+          "description": "Exercise name (e.g., Press banca)."
+        },
+        "serie": {
+          "type": "integer",
+          "description": "Set number within the exercise session (1..999)."
+        },
+        "peso": {
+          "type": "number",
+          "description": "Weight lifted in kilograms (0..2000)."
+        },
+        "reps": {
+          "type": "integer",
+          "description": "Repetitions performed (1..100)."
+        },
+        "rir": {
+          "type": "integer",
+          "description": "Reps in Reserve (0..5)."
+        },
+        "pesoCorporal": {
+          "type": "number",
+          "description": "Optional body weight in kilograms (0..500)."
+        },
+        "obs": {
+          "type": "string",
+          "description": "Optional training observation or technique note."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "fecha",
+        "grupo",
+        "ejercicio",
+        "serie",
+        "peso",
+        "reps",
+        "rir",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MuscleGroup": {
+      "title": "MuscleGroup",
+      "description": "A user-defined custom muscle group name.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated owner UID."
+        },
+        "name": {
+          "type": "string",
+          "description": "Custom muscle group display name."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "name",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/workoutSets/{setId}": {
+      "schema": {
+        "$ref": "#/entities/WorkoutSet"
+      },
+      "description": "Per-user collection of logged gym workout sets."
+    },
+    "/users/{userId}/muscleGroups/{groupId}": {
+      "schema": {
+        "$ref": "#/entities/MuscleGroup"
+      },
+      "description": "Per-user collection of custom muscle groups."
+    }
+  }
+}

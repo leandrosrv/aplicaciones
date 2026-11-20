@@ -1,0 +1,6 @@
+{
+  "name": "Registro Gym",
+  "description": "Aplicación Android para registrar series de entrenamiento por grupo muscular con seguimiento de 1RM estimado, gráficas de progreso y exportación CSV.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

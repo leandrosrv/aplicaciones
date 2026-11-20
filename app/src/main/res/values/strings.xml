@@ -1,0 +1,150 @@
+<resources>
+    <string name="app_name">Registro Gym</string>
+    <string name="app_subtitle">Registra cada serie por grupo muscular y sigue la evolución de tu 1RM estimado.</string>
+
+    <!-- Navigation -->
+    <string name="nav_log">Registrar</string>
+    <string name="nav_progress">Progreso</string>
+    <string name="nav_history">Historial</string>
+
+    <!-- Auth -->
+    <string name="auth_welcome_title">Registro de entrenamiento</string>
+    <string name="auth_welcome_subtitle">Lleva el control de tus series, peso corporal, volumen y 1RM estimado en la nube.</string>
+    <string name="auth_feature_1">Seguimiento automático de 1RM (fórmula Epley) y volumen por ejercicio</string>
+    <string name="auth_feature_2">Curvas de progreso interactivas por grupo muscular</string>
+    <string name="auth_feature_3">Exportación directa a CSV compatible con Excel y Google Sheets</string>
+    <string name="auth_sign_in_google">Iniciar sesión con Google</string>
+    <string name="auth_signing_in">Conectando…</string>
+    <string name="auth_sign_out">Cerrar sesión</string>
+    <string name="auth_config_missing">Falta la configuración de Google Sign-In.</string>
+
+    <!-- Form & Logging -->
+    <string name="section_new_set">Nueva serie</string>
+    <string name="section_edit_set">Editar serie</string>
+    <string name="label_date">Fecha</string>
+    <string name="label_muscle_group">Grupo muscular</string>
+    <string name="label_exercise">Ejercicio</string>
+    <string name="placeholder_exercise">Ej. Press banca</string>
+    <string name="label_set_number">Serie Nº</string>
+    <string name="label_weight_kg">Peso (kg)</string>
+    <string name="label_reps">Repeticiones</string>
+    <string name="label_rir">RIR (0–5)</string>
+    <string name="label_body_weight">Peso corporal (kg, opcional)</string>
+    <string name="placeholder_body_weight">Ej. 72.5</string>
+    <string name="label_observation">Observación (opcional)</string>
+    <string name="placeholder_observation">Técnica, molestias, etc.</string>
+    <string name="btn_add_set">Agregar serie</string>
+    <string name="btn_save_changes">Guardar cambios</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_add_group">+ Grupo</string>
+    <string name="dialog_add_group_title">Nuevo grupo muscular</string>
+    <string name="label_new_group_name">Nombre del grupo</string>
+    <string name="placeholder_new_group">Ej. Antebrazos</string>
+    <string name="btn_save_group">Guardar grupo</string>
+    <string name="hint_default_groups">Predeterminados: Pecho, Espalda, Hombros, Bíceps, Tríceps, Piernas, Glúteos, Abdominales y Gemelos.</string>
+
+    <!-- Summary & Metrics -->
+    <string name="section_summary">Resumen</string>
+    <string name="scope_today">Hoy</string>
+    <string name="scope_all">Total</string>
+    <string name="metric_sets">Series</string>
+    <string name="metric_reps">Repeticiones</string>
+    <string name="metric_volume">Volumen total</string>
+    <string name="metric_best_1rm">Mejor 1RM est.</string>
+    <string name="formula_note">Volumen = peso × reps · 1RM Epley = peso × (1 + reps / 30).</string>
+
+    <!-- Progress -->
+    <string name="section_progress">Progreso por grupo muscular</string>
+    <string name="label_progress_curve">Curva de progreso</string>
+    <string name="progress_note">Peso, 1RM y volumen toman el mejor/suma por ejercicio y fecha; repeticiones y series se suman por fecha. El peso corporal se muestra una vez por fecha.</string>
+    <string name="section_pr_breakdown">Marcas por ejercicio</string>
+    <string name="section_how_to_interpret">Cómo interpretar el progreso</string>
+    <string name="tip_1">Más peso con las mismas repeticiones y un RIR parecido indica progreso.</string>
+    <string name="tip_2">Más repeticiones con el mismo peso y un RIR parecido también indica progreso.</string>
+    <string name="tip_3">El 1RM estimado sirve para seguir tendencias, no sustituye a un máximo real.</string>
+    <string name="empty_chart_title">Sin datos para graficar</string>
+    <string name="empty_chart_subtitle">Registra series en este grupo muscular para visualizar la evolución.</string>
+
+    <!-- History & Export -->
+    <string name="section_logged_sets">Series registradas</string>
+    <string name="filter_all_groups">Todos</string>
+    <string name="search_exercise_hint">Buscar ejercicio…</string>
+    <string name="btn_export_csv">Exportar CSV</string>
+    <string name="btn_clear_log">Borrar registro</string>
+    <string name="dialog_clear_title">¿Borrar todos los datos?</string>
+    <string name="dialog_clear_message">Se eliminarán todas las series registradas de tu cuenta. Esta acción no se puede deshacer.</string>
+    <string name="btn_delete_all">Borrar todo</string>
+    <string name="empty_history_title">Aún no hay series registradas</string>
+    <string name="empty_history_subtitle">Ve a Registrar para añadir tu primera serie de entrenamiento.</string>
+
+    <!-- Content descriptions & Errors -->
+    <string name="cd_app_logo">Icono de Registro Gym</string>
+    <string name="cd_decrement">Disminuir</string>
+    <string name="cd_increment">Aumentar</string>
+    <string name="cd_delete_set">Eliminar serie</string>
+    <string name="cd_edit_set">Editar serie</string>
+    <string name="cd_pick_date">Seleccionar fecha</string>
+    <string name="cd_account_menu">Menú de cuenta</string>
+    <string name="msg_set_added">Serie registrada</string>
+    <string name="msg_set_updated">Serie actualizada</string>
+    <string name="msg_set_deleted">Serie eliminada</string>
+    <string name="msg_log_cleared">Registro borrado</string>
+    <string name="msg_group_added">Grupo muscular añadido</string>
+    <string name="msg_csv_exported">Archivo CSV guardado correctamente</string>
+    <string name="msg_csv_empty">No hay series para exportar</string>
+    <string name="msg_retry">Reintentar</string>
+
+    <!-- Session Image Export -->
+    <string name="btn_save_image">Guardar imagen</string>
+    <string name="dialog_image_title">Imagen de la sesión</string>
+    <string name="image_scope_today">Hoy</string>
+    <string name="image_scope_latest">Última sesión</string>
+    <string name="image_scope_all">Todo</string>
+    <string name="btn_save_gallery">Guardar en galería</string>
+    <string name="btn_save_as">Guardar como…</string>
+    <string name="msg_image_saved">Imagen guardada en la galería</string>
+    <string name="msg_image_empty">No hay series registradas para generar la imagen</string>
+    <string name="cd_session_image_preview">Vista previa de la imagen de la sesión</string>
+
+    <!-- Planilla / Batch Entry -->
+    <string name="mode_sheet">Planilla grupal</string>
+    <string name="mode_single">Serie rápida</string>
+    <string name="sheet_title">Planilla de entrenamiento</string>
+    <string name="sheet_load_previous">Cargar última sesión</string>
+    <string name="sheet_add_row">Agregar serie</string>
+    <string name="sheet_save_all">Guardar series (%1$d)</string>
+    <string name="sheet_goal_progress">Objetivo de sesión: %1$d/%2$d series · Vol. %3$.0f / %4$.0f kg</string>
+    <string name="sheet_goal_hint">Compara cada fila con tu mejor/última marca para ese ejercicio y serie.</string>
+    <string name="sheet_done">Hecha</string>
+
+    <!-- Time Granularity -->
+    <string name="label_time_granularity">Agrupar en el tiempo</string>
+    <string name="filter_all_groups_chart">Todos</string>
+
+    <!-- Timer & Stopwatch -->
+    <string name="timer_section_title">Control de descanso</string>
+    <string name="tab_timer">Temporizador</string>
+    <string name="tab_stopwatch">Cronómetro</string>
+    <string name="btn_start">Iniciar</string>
+    <string name="btn_pause">Pausar</string>
+    <string name="btn_reset">Reiniciar</string>
+    <string name="btn_lap">Vuelta</string>
+    <string name="timer_finished">¡Descanso terminado!</string>
+
+    <!-- PDF Report & Share -->
+    <string name="btn_pdf_report">Informe PDF</string>
+    <string name="btn_pdf_short">PDF</string>
+    <string name="btn_image_short">Imagen</string>
+    <string name="dialog_pdf_title">Informe y archivo PDF</string>
+    <string name="label_pdf_scope">Sesión del informe</string>
+    <string name="label_pdf_charts">Gráficos incluidos</string>
+    <string name="label_pdf_preview">Vista previa del informe</string>
+    <string name="btn_share_pdf">Enviar / Compartir PDF</string>
+    <string name="btn_save_pdf_downloads">Guardar en Descargas</string>
+    <string name="btn_save_pdf_as">Guardar PDF como…</string>
+    <string name="btn_save_pdf">Guardar PDF</string>
+    <string name="msg_pdf_saved">Informe PDF guardado correctamente</string>
+    <string name="msg_pdf_empty">No hay series registradas para generar el informe</string>
+    <string name="msg_pdf_error">No se pudo generar el informe PDF</string>
+    <string name="share_pdf_chooser">Enviar informe PDF</string>
+</resources>

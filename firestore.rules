@@ -1,0 +1,114 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidWorkoutSet(data, userId) {
+      return data.userId is string &&
+             data.userId == userId &&
+             data.fecha is string &&
+             data.fecha.size() == 10 &&
+             data.fecha.matches('^\\d{4}-\\d{2}-\\d{2}$') &&
+             data.grupo is string &&
+             data.grupo.size() >= 1 &&
+             data.grupo.size() <= 60 &&
+             data.ejercicio is string &&
+             data.ejercicio.size() >= 1 &&
+             data.ejercicio.size() <= 100 &&
+             data.serie is int &&
+             data.serie >= 1 &&
+             data.serie <= 999 &&
+             data.peso is number &&
+             data.peso >= 0 &&
+             data.peso <= 2000 &&
+             data.reps is int &&
+             data.reps >= 1 &&
+             data.reps <= 100 &&
+             data.rir is int &&
+             data.rir >= 0 &&
+             data.rir <= 5 &&
+             (!('pesoCorporal' in data) || (data.pesoCorporal is number && data.pesoCorporal >= 0 && data.pesoCorporal <= 500)) &&
+             (!('obs' in data) || (data.obs is string && data.obs.size() <= 300)) &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt is timestamp &&
+             data.updatedAt <= request.time;
+    }
+
+    function isValidMuscleGroup(data, userId) {
+      return data.userId is string &&
+             data.userId == userId &&
+             data.name is string &&
+             data.name.size() >= 1 &&
+             data.name.size() <= 60 &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt is timestamp &&
+             data.updatedAt <= request.time;
+    }
+
+    match /users/{userId}/workoutSets/{setId} {
+      allow get: if isOwner(userId) && isValidId(setId);
+      allow list: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+                       isValidId(setId) &&
+                       incoming().keys().hasAll(['userId', 'fecha', 'grupo', 'ejercicio', 'serie', 'peso', 'reps', 'rir', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'fecha', 'grupo', 'ejercicio', 'serie', 'peso', 'reps', 'rir', 'pesoCorporal', 'obs', 'createdAt', 'updatedAt']) &&
+                       isValidWorkoutSet(incoming(), userId);
+
+      allow update: if isOwner(userId) &&
+                       isValidId(setId) &&
+                       isValidWorkoutSet(incoming(), userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['fecha', 'grupo', 'ejercicio', 'serie', 'peso', 'reps', 'rir', 'pesoCorporal', 'obs', 'updatedAt']);
+
+      allow delete: if isOwner(userId) && isValidId(setId);
+    }
+
+    match /users/{userId}/muscleGroups/{groupId} {
+      allow get: if isOwner(userId) && isValidId(groupId);
+      allow list: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+                       isValidId(groupId) &&
+                       incoming().keys().hasAll(['userId', 'name', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['userId', 'name', 'createdAt', 'updatedAt']) &&
+                       isValidMuscleGroup(incoming(), userId);
+
+      allow update: if isOwner(userId) &&
+                       isValidId(groupId) &&
+                       isValidMuscleGroup(incoming(), userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['name', 'updatedAt']);
+
+      allow delete: if isOwner(userId) && isValidId(groupId);
+    }
+  }
+}
