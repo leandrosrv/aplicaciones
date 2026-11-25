@@ -4,12 +4,39 @@ import com.example.data.ExercisePrSummary
 import com.example.data.ProgressMetric
 import com.example.data.TimeGranularity
 import com.example.data.WorkoutSet
+import java.text.Collator
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 const val ALL_GROUPS_CHART = "Todos"
+const val ALL_EXERCISES_CHART = "Todos"
+
+fun availableExercisesForGroup(
+    allSets: List<WorkoutSet>,
+    group: String,
+): List<String> {
+    val subset = if (group.equals(ALL_GROUPS_CHART, ignoreCase = true)) {
+        allSets
+    } else {
+        allSets.filter { it.grupo.equals(group, ignoreCase = true) }
+    }
+    val collator = Collator.getInstance(Locale("es", "ES")).apply {
+        strength = Collator.PRIMARY
+    }
+    val seen = LinkedHashMap<String, String>()
+    for (item in subset) {
+        val trimmed = item.ejercicio.trim()
+        if (trimmed.isNotEmpty()) {
+            val key = trimmed.lowercase(Locale.getDefault())
+            if (!seen.containsKey(key)) {
+                seen[key] = trimmed
+            }
+        }
+    }
+    return seen.values.sortedWith { a, b -> collator.compare(a, b) }
+}
 
 data class ChartSeries(
     val name: String,
@@ -34,11 +61,18 @@ fun buildChartModel(
     group: String,
     metric: ProgressMetric,
     granularity: TimeGranularity,
+    exercise: String = ALL_EXERCISES_CHART,
 ): ChartModel {
-    val subset = if (group.equals(ALL_GROUPS_CHART, ignoreCase = true)) {
+    val groupSubset = if (group.equals(ALL_GROUPS_CHART, ignoreCase = true)) {
         allSets
     } else {
         allSets.filter { it.grupo.equals(group, ignoreCase = true) }
+    }
+    val subset = if (exercise.equals(ALL_EXERCISES_CHART, ignoreCase = true)) {
+        groupSubset
+    } else {
+        val target = exercise.trim()
+        groupSubset.filter { it.ejercicio.trim().equals(target, ignoreCase = true) }
     }
     if (subset.isEmpty()) {
         return ChartModel(emptyList(), emptyList(), metric, granularity)
@@ -184,11 +218,18 @@ private fun bucketForItem(
 fun buildExercisePrs(
     allSets: List<WorkoutSet>,
     group: String,
+    exercise: String = ALL_EXERCISES_CHART,
 ): List<ExercisePrSummary> {
-    val subset = if (group.equals(ALL_GROUPS_CHART, ignoreCase = true)) {
+    val groupSubset = if (group.equals(ALL_GROUPS_CHART, ignoreCase = true)) {
         allSets
     } else {
         allSets.filter { it.grupo.equals(group, ignoreCase = true) }
+    }
+    val subset = if (exercise.equals(ALL_EXERCISES_CHART, ignoreCase = true)) {
+        groupSubset
+    } else {
+        val target = exercise.trim()
+        groupSubset.filter { it.ejercicio.trim().equals(target, ignoreCase = true) }
     }
     return subset.groupBy { it.ejercicio }
         .map { (exercise, items) ->

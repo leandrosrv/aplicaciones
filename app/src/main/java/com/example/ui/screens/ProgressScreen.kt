@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import com.example.R
 import com.example.data.ExercisePrSummary
 import com.example.data.ProgressMetric
 import com.example.data.TimeGranularity
+import com.example.ui.ALL_EXERCISES_CHART
 import com.example.ui.ALL_GROUPS_CHART
 import com.example.ui.ChartModel
 import com.example.ui.components.ProgressLineChart
@@ -50,12 +52,15 @@ import java.util.Locale
 fun ProgressScreen(
     muscleGroups: List<String>,
     selectedGroup: String,
+    availableExercises: List<String>,
+    selectedExercise: String,
     selectedMetric: ProgressMetric,
     selectedGranularity: TimeGranularity,
     chartModel: ChartModel,
     prSummaries: List<ExercisePrSummary>,
     canExportReport: Boolean,
     onGroupChange: (String) -> Unit,
+    onExerciseChange: (String) -> Unit,
     onMetricChange: (ProgressMetric) -> Unit,
     onGranularityChange: (TimeGranularity) -> Unit,
     onOpenPdfReport: () -> Unit,
@@ -117,6 +122,51 @@ fun ProgressScreen(
                                         label = { Text(group) },
                                         modifier = Modifier.testTag("chart_group_$group"),
                                     )
+                                }
+                            }
+                        }
+
+                        // Exercise selector ("Todos" + exercises performed in selected group)
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                text = stringResource(R.string.label_exercise_filter),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            if (availableExercises.isEmpty()) {
+                                Text(
+                                    text = "Aún no hay ejercicios registrados en $selectedGroup.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            } else {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .horizontalScroll(rememberScrollState()),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    FilterChip(
+                                        selected = selectedExercise.equals(ALL_EXERCISES_CHART, ignoreCase = true),
+                                        onClick = { onExerciseChange(ALL_EXERCISES_CHART) },
+                                        label = { Text(stringResource(R.string.filter_all_exercises_chart)) },
+                                        modifier = Modifier.testTag("chart_exercise_all"),
+                                    )
+                                    availableExercises.forEach { exercise ->
+                                        FilterChip(
+                                            selected = selectedExercise.equals(exercise, ignoreCase = true),
+                                            onClick = {
+                                                val next = if (selectedExercise.equals(exercise, ignoreCase = true)) {
+                                                    ALL_EXERCISES_CHART
+                                                } else {
+                                                    exercise
+                                                }
+                                                onExerciseChange(next)
+                                            },
+                                            label = { Text(exercise) },
+                                            modifier = Modifier.testTag("chart_exercise_$exercise"),
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -251,7 +301,11 @@ fun ProgressScreen(
                                     tint = MaterialTheme.colorScheme.tertiary,
                                 )
                                 Text(
-                                    text = "${stringResource(R.string.section_pr_breakdown)} · $selectedGroup",
+                                    text = if (selectedExercise.equals(ALL_EXERCISES_CHART, ignoreCase = true)) {
+                                        "${stringResource(R.string.section_pr_breakdown)} · $selectedGroup"
+                                    } else {
+                                        "${stringResource(R.string.section_pr_breakdown)} · $selectedExercise"
+                                    },
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -261,9 +315,15 @@ fun ProgressScreen(
                                 if (index > 0) {
                                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                                 }
+                                val isFocused = selectedExercise.equals(pr.exerciseName, ignoreCase = true)
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
+                                        .clickable {
+                                            onExerciseChange(
+                                                if (isFocused) ALL_EXERCISES_CHART else pr.exerciseName
+                                            )
+                                        }
                                         .padding(vertical = 4.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically,

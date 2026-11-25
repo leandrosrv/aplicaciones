@@ -155,6 +155,9 @@ class WorkoutViewModel(
     private val _chartGroup = MutableStateFlow(DEFAULT_MUSCLE_GROUPS.first())
     val chartGroup: StateFlow<String> = _chartGroup.asStateFlow()
 
+    private val _chartExercise = MutableStateFlow(ALL_EXERCISES_CHART)
+    val chartExercise: StateFlow<String> = _chartExercise.asStateFlow()
+
     private val _chartMetric = MutableStateFlow(ProgressMetric.ONE_RM)
     val chartMetric: StateFlow<ProgressMetric> = _chartMetric.asStateFlow()
 
@@ -195,14 +198,27 @@ class WorkoutViewModel(
         initialValue = WorkoutSummary(),
     )
 
+    val availableChartExercises: StateFlow<List<String>> = combine(
+        setsState,
+        _chartGroup,
+    ) { state, group ->
+        val allSets = (state as? UiState.Success)?.data.orEmpty()
+        availableExercisesForGroup(allSets, group)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+        initialValue = emptyList(),
+    )
+
     val chartModel: StateFlow<ChartModel> = combine(
         setsState,
         _chartGroup,
+        _chartExercise,
         _chartMetric,
         _chartGranularity,
-    ) { state, group, metric, granularity ->
+    ) { state, group, exercise, metric, granularity ->
         val allSets = (state as? UiState.Success)?.data.orEmpty()
-        buildChartModel(allSets, group, metric, granularity)
+        buildChartModel(allSets, group, metric, granularity, exercise)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
@@ -212,9 +228,10 @@ class WorkoutViewModel(
     val exercisePrSummaries: StateFlow<List<ExercisePrSummary>> = combine(
         setsState,
         _chartGroup,
-    ) { state, group ->
+        _chartExercise,
+    ) { state, group, exercise ->
         val allSets = (state as? UiState.Success)?.data.orEmpty()
-        buildExercisePrs(allSets, group)
+        buildExercisePrs(allSets, group, exercise)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
@@ -283,6 +300,18 @@ class WorkoutViewModel(
 
     fun setChartGroup(group: String) {
         _chartGroup.value = group
+        val allSets = (setsState.value as? UiState.Success)?.data.orEmpty()
+        val validExercises = availableExercisesForGroup(allSets, group)
+        val currentExercise = _chartExercise.value
+        if (!currentExercise.equals(ALL_EXERCISES_CHART, ignoreCase = true) &&
+            validExercises.none { it.equals(currentExercise, ignoreCase = true) }
+        ) {
+            _chartExercise.value = ALL_EXERCISES_CHART
+        }
+    }
+
+    fun setChartExercise(exercise: String) {
+        _chartExercise.value = exercise
     }
 
     fun setChartMetric(metric: ProgressMetric) {

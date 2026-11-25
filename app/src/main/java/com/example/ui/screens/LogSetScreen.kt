@@ -70,6 +70,8 @@ import com.example.R
 import com.example.data.PlanillaRowInput
 import com.example.data.WorkoutSet
 import com.example.data.WorkoutSummary
+import com.example.gamification.engine.GamificationSnapshot
+import com.example.gamification.ui.HomeAvatarXpBannerCard
 import com.example.ui.EntryMode
 import com.example.ui.RestTimerState
 import com.example.ui.SummaryScope
@@ -127,6 +129,9 @@ fun LogSetScreen(
     onToggleStopwatch: () -> Unit,
     onLapStopwatch: () -> Unit,
     onResetStopwatch: () -> Unit,
+    onOpenMiniGames: (() -> Unit)? = null,
+    gamificationSnapshot: GamificationSnapshot? = null,
+    onOpenAthleteTab: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
@@ -151,6 +156,13 @@ fun LogSetScreen(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
+                if (gamificationSnapshot != null && gamificationSnapshot.enabled) {
+                    HomeAvatarXpBannerCard(
+                        snapshot = gamificationSnapshot,
+                        onOpenAthlete = onOpenAthleteTab,
+                    )
+                }
+
                 SummaryMetricsCard(
                     summary = summary,
                     scope = summaryScope,
@@ -170,6 +182,7 @@ fun LogSetScreen(
                     onToggleStopwatch = onToggleStopwatch,
                     onLapStopwatch = onLapStopwatch,
                     onResetStopwatch = onResetStopwatch,
+                    onOpenMiniGames = onOpenMiniGames,
                 )
 
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
@@ -362,7 +375,7 @@ fun LogSetScreen(
                             )
                         }
                         LinearProgressIndicator(
-                            progress = { progressFraction },
+                            progress = { progressFraction.coerceIn(0f, 1f) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(6.dp),

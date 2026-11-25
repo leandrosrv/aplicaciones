@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -65,6 +66,7 @@ fun RestTimerPanel(
     onToggleStopwatch: () -> Unit,
     onLapStopwatch: () -> Unit,
     onResetStopwatch: () -> Unit,
+    onOpenMiniGames: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -349,6 +351,19 @@ fun RestTimerPanel(
                             ) {
                                 Icon(Icons.Filled.Refresh, null, Modifier.size(18.dp))
                             }
+                        }
+                    }
+
+                    if (onOpenMiniGames != null) {
+                        OutlinedButton(
+                            onClick = onOpenMiniGames,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("rest_timer_minigame_button"),
+                        ) {
+                            Icon(Icons.Filled.SportsEsports, null, Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text("Minijuego de pausa (máx. 1 min)")
                         }
                     }
                 }

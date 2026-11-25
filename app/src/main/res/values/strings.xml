@@ -6,6 +6,7 @@
     <string name="nav_log">Registrar</string>
     <string name="nav_progress">Progreso</string>
     <string name="nav_history">Historial</string>
+    <string name="nav_athlete">Mi Atleta</string>
 
     <!-- Auth -->
     <string name="auth_welcome_title">Registro de entrenamiento</string>
@@ -55,6 +56,8 @@
 
     <!-- Progress -->
     <string name="section_progress">Progreso por grupo muscular</string>
+    <string name="label_exercise_filter">Ejercicio realizado</string>
+    <string name="filter_all_exercises_chart">Todos</string>
     <string name="label_progress_curve">Curva de progreso</string>
     <string name="progress_note">Peso, 1RM y volumen toman el mejor/suma por ejercicio y fecha; repeticiones y series se suman por fecha. El peso corporal se muestra una vez por fecha.</string>
     <string name="section_pr_breakdown">Marcas por ejercicio</string>
